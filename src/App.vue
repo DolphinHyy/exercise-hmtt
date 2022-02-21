@@ -1,10 +1,23 @@
 <template>
-  <div>hmtt</div>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-export default {};
+import { testAPI } from "@/api";
+export default {
+  name: "app",
+  async created() {
+    try {
+      let res = await testAPI();
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+};
 </script>
 
-<style>
+<style scoped lang='less'>
 </style>
