@@ -4,13 +4,8 @@
       <!-- 基本信息 -->
       <div class="base">
         <div class="left">
-          <van-image
-            fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
-            class="avatar"
-            round
-          />
-          <span class="name">黑马头条</span>
+          <van-image fit="cover" :src="userInfo.photo" class="avatar" round />
+          <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
           <van-button type="default" size="mini" round>编辑资料</van-button>
@@ -19,19 +14,19 @@
       <!-- 粉丝、关注 -->
       <div class="data">
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.art_count }}</span>
           <span>头条</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.follow_count }}</span>
           <span>关注</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.fans_count }}</span>
           <span>粉丝</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.like_count }}</span>
           <span>获赞</span>
         </div>
       </div>
@@ -64,6 +59,7 @@
     <van-cell
       class="logout-cell"
       @click="onLogout"
+      clickable
       v-if="user"
       title="退出登录"
     />
@@ -73,20 +69,25 @@
 
 <script>
 import { mapState } from "vuex";
+import { getUserInfoAPI } from "@/api";
 export default {
   name: "MyPage",
   components: {},
   props: {},
   data() {
     return {
-      isLogin: false,
+      userInfo: {},
     };
   },
   computed: {
     ...mapState([`user`]),
   },
   watch: {},
-  created() {},
+  created() {
+    if (this.user) {
+      this.loadUserInfo();
+    }
+  },
   mounted() {},
   methods: {
     onLogout() {
@@ -105,6 +106,16 @@ export default {
           // on cancel
           console.log("取消执行这里");
         });
+    },
+    async loadUserInfo() {
+      try {
+        const { data } = await getUserInfoAPI();
+        console.log(data);
+        this.userInfo = data.data;
+      } catch (error) {
+        this.$toast("获取用户信息失败，请稍后重试");
+        console.dir(error);
+      }
     },
   },
 };
