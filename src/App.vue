@@ -11,7 +11,7 @@ export default {
   async created() {
     try {
       let res = await testAPI();
-      console.log(res.data);
+      console.log("test", res.data);
     } catch (error) {
       console.log(error);
     }
